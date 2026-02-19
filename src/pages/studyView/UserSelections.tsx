@@ -703,6 +703,13 @@ export default class UserSelections extends React.Component<
         return components;
     }
 
+    private resolveSurvivalAttributeId(attributeId: string) {
+        const survivalAttributeId = getSurvivalChartMetaId(attributeId);
+        return this.props.attributesMetaSet[survivalAttributeId]
+            ? survivalAttributeId
+            : attributeId;
+    }
+
     private renderClinicalDataFilters(
         filters: ClinicalDataFilter[],
         components: JSX.Element[],
@@ -714,13 +721,11 @@ export default class UserSelections extends React.Component<
                 const attributeId = isSurvivalAttributeId(
                     clinicalDataFilter.attributeId
                 )
-                    ? getSurvivalChartMetaId(clinicalDataFilter.attributeId)
+                    ? this.resolveSurvivalAttributeId(
+                          clinicalDataFilter.attributeId
+                      )
                     : clinicalDataFilter.attributeId;
-                const chartMeta =
-                    this.props.attributesMetaSet[attributeId] ||
-                    this.props.attributesMetaSet[
-                        clinicalDataFilter.attributeId
-                    ];
+                const chartMeta = this.props.attributesMetaSet[attributeId];
                 if (chartMeta) {
                     const dataType = this.props.clinicalAttributeIdToDataType[
                         clinicalDataFilter.attributeId
